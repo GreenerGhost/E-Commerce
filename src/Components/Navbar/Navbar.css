@@ -1,0 +1,96 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f9f9f9;
+  border-bottom: 1px solid #ddd;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  color: #9893FB;
+  cursor: pointer;
+
+  & span {
+    color: #000;
+  }
+}
+
+.navbar {
+  flex: 1;
+  margin-left: 2rem;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+
+  & a {
+    text-decoration: none;
+    color: #555;
+    font-size: 12px;
+
+    &:hover {
+      color: #9893FB;
+    }
+  }
+}
+
+.icons {
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+}
+
+.search-bar {
+  padding: .5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+}
+
+.search-button,
+.icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: #9893FB;
+  }
+}
+
+/* Estilo para contenedor de carrito de compra */
+
+.icon-button {
+  position: relative;
+  display: inline-block;
+}
+
+/* Estilo para el contador que se muestra sobre el icono */
+
+.counter {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+  color: #fff;
+  background-color: #9893FB;
+}
