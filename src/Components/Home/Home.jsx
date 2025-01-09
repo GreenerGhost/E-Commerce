@@ -1,9 +1,10 @@
+import ProductList from "../ProductList/ProductList";
 
 
 export default function Home() {
   return (
-    <div>
-      HOME
-    </div>
+    <>
+      <ProductList/>
+    </>
   )
 }
