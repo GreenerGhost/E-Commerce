@@ -3,8 +3,14 @@ import "./ProductList.css";
 
 export default function ProductList() {
 
+  // se maneja el estado de los productos
   const [products, setProducts] = useState([]);
+
+  // se maneja el error en caso de que se produzca un error en la llamada a la API
   const [error, setError] = useState(null);
+
+  // se maneja el estado de la búsqueda
+  const[sort, setSort] = useState("Popularidad");
 
 
   // Se ejecuta solo una vez, cuando se monta el componente
@@ -27,6 +33,20 @@ export default function ProductList() {
 
     fetchData();
   }, []);
+
+  // Se ejecuta cuando cambia el estado de la búsqueda
+  const handleSortChange = (event) => {
+    setSort(event.target.value);
+  };
+
+  const orderedProducts = [...products].sort((a, b) => {
+    if (sort === "price-asc") {
+      return a.precio - b.precio;
+    } else if (sort === "price-desc") {
+      return b.precio - a.precio;
+    }
+    return 0;
+  });
 
   return (
     <section className="main-content">
@@ -74,7 +94,7 @@ export default function ProductList() {
           <div className="sort-options">
             <label>
               Ordenar por:
-              <select>
+              <select onChange={handleSortChange} value={sort}>
                 <option value="popularity">Popularidad</option>
                 <option value="price-asc">Precio: menor a mayor</option>
                 <option value="price-desc">Precio: mayor a menor</option>
@@ -88,9 +108,9 @@ export default function ProductList() {
           error ? (
             <p className="error-message">Hubo un error en la carga de productos: {error}</p>
           ) : (
-            products.map( ( product ) => (
+            orderedProducts.map( ( product ) => (
               <div key={ product.id } className="product-card">
-                <img src={ product.image } alt={product.name} className="product-image"/>
+                <img src={ product.image } alt={product.nombre} className="product-image"/>
                 <h3>{ product.nombre }</h3>
                 <p>${ product.precio }</p>
               </div>
