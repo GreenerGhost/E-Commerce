@@ -10,8 +10,10 @@ export default function ProductList() {
   const [error, setError] = useState(null);
 
   // se maneja el estado de la búsqueda
-  const[sort, setSort] = useState("Popularidad");
+  const [sort, setSort] = useState("Popularidad");
 
+  // se maneja el estado para la filtración
+  const [filters, setFilters] = useState( { categorias: [], tipos: [] } )
 
   // Se ejecuta solo una vez, cuando se monta el componente
   useEffect(() => {
@@ -39,14 +41,30 @@ export default function ProductList() {
     setSort(event.target.value);
   };
 
-  const orderedProducts = [...products].sort((a, b) => {
-    if (sort === "price-asc") {
-      return a.precio - b.precio;
-    } else if (sort === "price-desc") {
-      return b.precio - a.precio;
-    }
-    return 0;
+  // Se ejecuta cuando se cambia el estado de la filtración usando operador de propagación
+  const toggleFilters = (typeFilter, value) => {
+    setFilters( ( prev ) => ({
+      ...prev,
+      [typeFilter]: prev[typeFilter].includes(value)
+        ? prev[typeFilter].filter(( item ) => item !== value) 
+        : [...prev[typeFilter], value],
+    }))
+  };
+
+  // Se ejecuta cuando se cambia el estado de la filtración usando operador de propagación, es importante usar los mismos nombres que el la api utilizada
+  const filteredProducts = products.filter( ( product ) => {
+    return (filters.categorias.length === 0 || filters.categorias.includes(product.categoria)) && (filters.tipos.length === 0 || filters.tipos.includes(product.tipo));
   });
+
+    // Se realiza el ordenamiento de productos según orden ascendente o descendente de precio que se ejecuta cuando cambia el estado de sort
+    const orderedProducts = [...filteredProducts].sort((a, b) => {
+      if (sort === "price-asc") {
+        return a.precio - b.precio;
+      } else if (sort === "price-desc") {
+        return b.precio - a.precio;
+      }
+      return 0;
+    });
 
   return (
     <section className="main-content">
@@ -57,15 +75,24 @@ export default function ProductList() {
           <div className="filter-category">
             <h3>Categorias</h3>
             <label className="filter-type">
-              <input type="checkbox" />
+              <input 
+                type="checkbox" 
+                onChange={ () => { toggleFilters("categorias", "Hombres") } }
+              />
               <span>Hombres</span>
             </label>
             <label className="filter-type">
-              <input type="checkbox" />
+              <input
+                type="checkbox" 
+                onChange={ () => { toggleFilters("categorias", "Mujeres") } } 
+              />
               <span>Mujeres</span>
             </label>
             <label className="filter-type">
-              <input type="checkbox" />
+              <input
+                type="checkbox" 
+                onChange={ () => { toggleFilters("categorias", "Niños") } }
+              />
               <span>Niños</span>
             </label>
           </div>
@@ -73,15 +100,24 @@ export default function ProductList() {
           <div className="filter-category">
             <h3>Tipo de producto</h3>
             <label className="filter-type">
-              <input type="checkbox" />
+              <input 
+                type="checkbox" 
+                onChange={ () => { toggleFilters("tipos", "Prendas de abrigo") } }
+              />
               <span>Prendas de abrigo</span>
             </label>
             <label className="filter-type">
-              <input type="checkbox" />
+              <input 
+                type="checkbox" 
+                onChange={ () => { toggleFilters("tipos", "Ropa interior") } }
+              />
               <span>Ropa interior</span>
             </label>
             <label className="filter-type">
-              <input type="checkbox" />
+              <input
+                type="checkbox" 
+                onChange={ () => { toggleFilters("tipos", "Calzado") } }
+              />
               <span>Calzado</span>
             </label>
           </div>
@@ -107,7 +143,7 @@ export default function ProductList() {
           { // Se realiza una evaluación del error, si especifica un error se mostrará el error, en caso contrario se mostrara la información de los productos 
           error ? (
             <p className="error-message">Hubo un error en la carga de productos: {error}</p>
-          ) : (
+          ) : filteredProducts.length > 0 ? (
             orderedProducts.map( ( product ) => (
               <div key={ product.id } className="product-card">
                 <img src={ product.image } alt={product.nombre} className="product-image"/>
@@ -115,7 +151,9 @@ export default function ProductList() {
                 <p>${ product.precio }</p>
               </div>
             ))
-          )}
+          ) : (
+            <p className="no-results">No hay productos disponibles</p>
+          ) }
         </div>
       </main>
     </section>
