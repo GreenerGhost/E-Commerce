@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./ProductList.css";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductList() {
 
@@ -14,6 +15,9 @@ export default function ProductList() {
 
   // se maneja el estado para la filtración
   const [filters, setFilters] = useState( { categorias: [], tipos: [] } )
+
+  //
+  const navigate = useNavigate();
 
   // Se ejecuta solo una vez, cuando se monta el componente
   useEffect(() => {
@@ -65,6 +69,10 @@ export default function ProductList() {
       }
       return 0;
     });
+
+    const handleImageClick = (id) => {
+      navigate(`/product/${id}`);
+    };
 
   return (
     <section className="main-content">
@@ -146,7 +154,12 @@ export default function ProductList() {
           ) : filteredProducts.length > 0 ? (
             orderedProducts.map( ( product ) => (
               <div key={ product.id } className="product-card">
-                <img src={ product.image } alt={product.nombre} className="product-image"/>
+                <img 
+                  src={ product.image } 
+                  alt={product.nombre} 
+                  className="product-image"
+                  onClick={ () => handleImageClick(product.id) }  // Se llama al evento de click para navegar a la página de detalle del producto
+                />
                 <h3>{ product.nombre }</h3>
                 <p>${ product.precio }</p>
               </div>
