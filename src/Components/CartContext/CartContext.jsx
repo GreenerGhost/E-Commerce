@@ -1,4 +1,4 @@
-import React, { Children, createContext, useContext, useState } from "react";
+import React, { children, createContext, useContext, useState } from "react";
 
 const CartContext = createContext();
 
@@ -29,10 +29,10 @@ export const CartProvider = ( { children } ) => {
 
   return (
     // Provider envuelve a los componentes en un proveedor de contexto para especificar el valor de este contexto para todos los componentes hijos
-    <CartProvider.Provider value = { { shoppingCart, addToCart } }>
+    <CartContext.Provider value = { { shoppingCart, addToCart } }>
       { children }
-    </CartProvider.Provider>
+    </CartContext.Provider>
   )
 };
 
-export const useCart = () => useContext( ( CartContext ) )
+export const useCart = () => useContext( CartContext );

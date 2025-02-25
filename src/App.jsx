@@ -3,6 +3,7 @@ import Home from "./Components/Home/Home"
 import Navbar from "./Components/Navbar/Navbar"
 import DetailsProducts from "./Components/DetailsProducts/DetailsProducts"
 import { CartProvider } from "./Components/CartContext/CartContext"
+import Cart from "./Components/Cart/Cart"
 
 function App() {
 
@@ -16,7 +17,8 @@ function App() {
           {/* Se utiliza Routes para navegar entre componentes */} 
           <Routes>
             <Route path="/" exact element={<Home />} />
-            <Route path="/product/:id" exact element={<DetailsProducts />} />
+            <Route path="/product/:id" exact element={<DetailsProducts/>} />
+            <Route path="/shopping-cart" element={<Cart/>} />
           </Routes>
         </Router>
       </CartProvider>

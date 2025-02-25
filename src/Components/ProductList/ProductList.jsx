@@ -161,7 +161,7 @@ export default function ProductList() {
                   onClick={ () => handleImageClick(product.id) }  // Se llama al evento de click para navegar a la página de detalle del producto
                 />
                 <h3>{ product.nombre }</h3>
-                <p>${ product.precio }</p>
+                <p>${ product.precio.toFixed(2) }</p>
               </div>
             ))
           ) : (
