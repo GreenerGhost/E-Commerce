@@ -3,7 +3,19 @@ import "./Cart.css";
 
 export default function Cart() {
 
-  const { shoppingCart } = useCart();
+  const { shoppingCart, updateQuantity, removeFromCart } = useCart();
+  
+  const handleIncreaseQuantity = ( productID ) => {
+    updateQuantity( productID, 1 );
+  }
+
+  const handleDecreaseQuantity = ( productID ) => {
+    // Se verifica que la cantidad del producto sea mayor que 1, de lo contrario no se hace nada
+    const product = shoppingCart.find( ( item ) => item.id === productID )
+    if ( product.cantidad > 1 ) {
+      updateQuantity( productID, -1 );
+    }
+  };
 
   return (
     <div className="cart-container">
@@ -31,7 +43,9 @@ export default function Cart() {
                 </div>
                 <p>${ item.precio.toFixed(2) } </p>
                 <div className="quantity-controls">
-                  <button className="quantity-btn">
+                  <button className="quantity-btn"
+                   onClick={ () => handleDecreaseQuantity( item.id ) }  // Se llama al evento de click para un decremento la cantidad del producto en el carro
+                  >
                     -
                   </button>
                   <input 
@@ -40,14 +54,18 @@ export default function Cart() {
                     value={ item.cantidad } 
                     readOnly/>
 
-                    <button className="quantity-btn">
+                    <button className="quantity-btn"
+                      onClick={ () => handleIncreaseQuantity( item.id ) }  // Se llama al evento de click para incrementar la cantidad del producto en el carro
+                    >
                       +
                     </button>
                 </div>
 
                 <p>$0</p>
 
-                <button className="delete-btn">
+                <button className="delete-btn"
+                  onClick={ () => removeFromCart( item.id ) }  // Se llama al evento de click para eliminar el producto del carro de compras
+                >
                   <i className="fas fa-trash"></i>
                 </button>
               </li>
