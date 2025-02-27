@@ -4,6 +4,12 @@ import "./Cart.css";
 export default function Cart() {
 
   const { shoppingCart, updateQuantity, removeFromCart } = useCart();
+
+  const shippingCost = 10; // se fija el costo de envío en 10 
+
+  const subTotalCost = shoppingCart.reduce( ( cumulativeTotal, item ) => cumulativeTotal + ( item.precio * item.cantidad ), 0 );
+
+  const totalCost = subTotalCost + shippingCost;
   
   const handleIncreaseQuantity = ( productID ) => {
     updateQuantity( productID, 1 );
@@ -33,47 +39,59 @@ export default function Cart() {
             <p>Acción</p>
           </div>
           <ul className="cart-items">
-            { shoppingCart.map( ( item ) => (
+            { shoppingCart.map( ( item ) => {
+
+              const total = item.precio * item.cantidad;
+
               // Se utiliza un componente de función para renderizar cada producto del carro, el cual contiene las acciones de agregar, quitar y eliminar productos del carro
-              <li className="cart-item" key={ item.id }>
-                <div className="item-info">
-                <img src={ item.image } alt={ item.nombre } className="item-info__image image-small"/>
+              return (
+                <li className="cart-item" key={ item.id }>
+                  <div className="item-info">
+                  <img src={ item.image } alt={ item.nombre } className="item-info__image image-small"/>
 
-                  <h3 className="item-info__name">{ item.nombre }</h3>
-                </div>
-                <p>${ item.precio.toFixed(2) } </p>
-                <div className="quantity-controls">
-                  <button className="quantity-btn"
-                   onClick={ () => handleDecreaseQuantity( item.id ) }  // Se llama al evento de click para un decremento la cantidad del producto en el carro
-                  >
-                    -
-                  </button>
-                  <input 
-                    className="quantity-input"
-                    type="number" 
-                    value={ item.cantidad } 
-                    readOnly/>
-
+                    <h3 className="item-info__name">{ item.nombre }</h3>
+                  </div>
+                  <p>${ item.precio.toFixed(2) } </p>
+                  <div className="quantity-controls">
                     <button className="quantity-btn"
-                      onClick={ () => handleIncreaseQuantity( item.id ) }  // Se llama al evento de click para incrementar la cantidad del producto en el carro
+                    onClick={ () => handleDecreaseQuantity( item.id ) }  // Se llama al evento de click para un decremento la cantidad del producto en el carro
                     >
-                      +
+                      -
                     </button>
-                </div>
+                    <input 
+                      className="quantity-input"
+                      type="number" 
+                      value={ item.cantidad } 
+                      readOnly/>
 
-                <p>$0</p>
+                      <button className="quantity-btn"
+                        onClick={ () => handleIncreaseQuantity( item.id ) }  // Se llama al evento de click para incrementar la cantidad del producto en el carro
+                      >
+                        +
+                      </button>
+                  </div>
 
-                <button className="delete-btn"
-                  onClick={ () => removeFromCart( item.id ) }  // Se llama al evento de click para eliminar el producto del carro de compras
-                >
-                  <i className="fas fa-trash"></i>
-                </button>
-              </li>
-            ) ) }
+                  <p>${ total.toFixed(2) }</p>
+
+                  <button className="delete-btn"
+                    onClick={ () => removeFromCart( item.id ) }  // Se llama al evento de click para eliminar el producto del carro de compras
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
+                </li>
+              )
+          } ) }
           </ul>
           </>
         )
       }
+      <div className="cart-summary">
+        <h2> TU <span>CARRITO </span></h2>
+        <p>Subtotal: <span>${ subTotalCost.toFixed(2) }</span></p>
+        <p>Coste del envío: <span>${ shippingCost.toFixed(2) }</span></p>
+        <p className="cart-summary__total">Total: <span>${ totalCost.toFixed(2) }</span></p>
+        <button className="checkout-btn">MÉTODO DE PAGO</button>
+      </div>
     </div>
   )
 }
