@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./ProductList.css";
 import { useNavigate } from "react-router-dom";
 
-export default function ProductList() {
+export default function ProductList( { searchWords } ) {
 
   // se maneja el estado de los productos
   const [products, setProducts] = useState([]);
@@ -55,9 +55,21 @@ export default function ProductList() {
     }))
   };
 
+  // Se ejecutara para normalizar el texto de búsqueda
+  const normalizedText = ( text ) => {
+    return text
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+  }
+
   // Se ejecuta cuando se cambia el estado de la filtración usando operador de propagación, es importante usar los mismos nombres que el la api utilizada
   const filteredProducts = products.filter( ( product ) => {
-    return (filters.categorias.length === 0 || filters.categorias.includes(product.categoria)) && (filters.tipos.length === 0 || filters.tipos.includes(product.tipo));
+
+    // Se normaliza el texto de búsqueda para que coincida con la información de la API
+    const searchMatch = !searchWords || normalizedText( product.nombre ).includes( normalizedText( searchWords ) ) || normalizedText( product.descripcion ).includes( normalizedText( searchWords ) );
+
+    return (filters.categorias.length === 0 || filters.categorias.includes(product.categoria)) && (filters.tipos.length === 0 || filters.tipos.includes(product.tipo)) && searchMatch;
   });
 
     // Se realiza el ordenamiento de productos según orden ascendente o descendente de precio que se ejecuta cuando cambia el estado de sort
