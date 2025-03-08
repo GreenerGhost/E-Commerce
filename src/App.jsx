@@ -10,10 +10,18 @@ import Search from "./Components/Search/Search"
 function App() {
 
   // Se maneja la búsqueda de productos inicializando la constante como una cadena vacía
-  const [searchWords, setSearchWords] = useState();
+  const [searchWords, setSearchWords] = useState("");
 
   const handleSearch = (words) => {
     setSearchWords(words.toLowerCase());
+  };
+
+  // Se manejará la visibilidad del buscador, que inicialmente se mantendrá oculto
+  const [showSearch, setShowSearch] = useState(false);
+
+  // Se maneja el evento click para mostrar y ocultar el buscador
+  const toggleSearch = () => {
+    setShowSearch(!showSearch);
   };
 
 
@@ -23,11 +31,11 @@ function App() {
       <CartProvider>
         {/* Se utiliza Route para especificar las rutas y los componentes que se van a renderizar */} 
         <Router>
-          <Navbar/>
+          <Navbar toggleSearch = { toggleSearch }/>
           {/* Se utiliza Routes para navegar entre componentes */} 
           <Routes>
             {/* Se pasan props al elemento Home para buscar elementos por palabras */}
-            <Route path="/" exact element={<Home searchWords = { searchWords } />} />
+            <Route path="/" exact element={<Home searchWords = { searchWords } showSearch = { showSearch }/>} />
             <Route path="/product/:id" exact element={<DetailsProducts/>} />
             <Route path="/shopping-cart" element={<Cart/>} />
             <Route path="/search" element={<Search onSearch = { handleSearch }/>} />

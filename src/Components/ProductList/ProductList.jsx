@@ -66,10 +66,16 @@ export default function ProductList( { searchWords } ) {
   // Se ejecuta cuando se cambia el estado de la filtración usando operador de propagación, es importante usar los mismos nombres que el la api utilizada
   const filteredProducts = products.filter( ( product ) => {
 
+    // Se verifica que las categorías y tipos de productos seleccionados coincidan con las del producto actual
+    const categoryFilter = filters.categorias.length === 0 || filters.categorias.includes(product.categoria);
+
+    const typeFilter = filters.tipos.length === 0 || filters.tipos.includes(product.tipo);
+
     // Se normaliza el texto de búsqueda para que coincida con la información de la API
     const searchMatch = !searchWords || normalizedText( product.nombre ).includes( normalizedText( searchWords ) ) || normalizedText( product.descripcion ).includes( normalizedText( searchWords ) );
 
-    return (filters.categorias.length === 0 || filters.categorias.includes(product.categoria)) && (filters.tipos.length === 0 || filters.tipos.includes(product.tipo)) && searchMatch;
+    // Se devuelve true si coincide con la información de la API y el estado de las filtraciones
+    return categoryFilter && typeFilter && searchMatch;
   });
 
     // Se realiza el ordenamiento de productos según orden ascendente o descendente de precio que se ejecuta cuando cambia el estado de sort
